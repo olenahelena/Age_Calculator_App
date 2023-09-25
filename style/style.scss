@@ -216,7 +216,7 @@ input::placeholder {
 .error_message {
     display: none;
     position: absolute;
-    top: 21.625rem;
+    top: 18rem;
     color: $light-red;
     font-size: 0.75rem;
     font-weight: 500;
@@ -316,7 +316,7 @@ input[type=number].error {
     }
 
     .error_message {
-        top: 19.25rem;
+        top: 15.25rem;
         font-size: 0.875rem;
         padding-top: 0.8125rem;
         max-width: none;
