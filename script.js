@@ -25,7 +25,6 @@ myButton.onclick = function () {
     const monthValue = monthInput.value.trim();
     const yearValue = yearInput.value.trim();
 
-
     if (dayValue === '') {
         dayLabel.classList.add('error');
         dayInput.classList.add('error');
@@ -37,12 +36,7 @@ myButton.onclick = function () {
         dayTextError.style.display = 'block';
         dayTextError.textContent = 'Must be a valid date';
     } 
-    else if (isDateValid(dayValue)) {
-        dayLabel.classList.add('error');
-        dayInput.classList.add('error');
-        dayTextError.style.display = 'block';
-        dayTextError.textContent = 'Must be a valid date!';
-    } else {
+    else  {
         dayLabel.classList.remove('error');
         dayInput.classList.remove('error');
         dayTextError.style.display = 'none';
@@ -91,44 +85,42 @@ myButton.onclick = function () {
     // Check if the parsed values are valid
     if (isNaN(dayInt) || isNaN(monthInt) || isNaN(yearInt)) {
         // Handle invalid input here
+        alert('Invalid date. Please enter a valid date.');
         return;
     }
 
-     //Create Date objects and calculate age
-    const givenDate = new Date(yearInt, monthInt - 1, dayInt);
-    const ageInMilliseconds = currentDate - givenDate;
-    const ageInDays = Math.floor(ageInMilliseconds / (24 * 60 * 60 * 1000));
+// Create Date objects and calculate age
+const givenDate = new Date(yearInt, monthInt - 1, dayInt);
+let ageInYears = currentYear - yearInt - 1;
 
-    // Calculate age in months based on the year and month difference
-    const yearDifference = currentDate.getFullYear() - givenDate.getFullYear();
-    const monthDifference = currentDate.getMonth() - givenDate.getMonth();
-    const ageInMonths = yearDifference * 12 + monthDifference;
-
-    const ageInYears = currentYear - yearInt;
-
-    // Calculate the remaining days and months
-    const remainingMonths = ageInMonths % 12;
-    const remainingDays = ageInDays % 30;
-
-    // Set the output values
-    dayOutput.textContent = `${remainingDays}`;
-    dayOutput.classList.add('animated-number');
-    monthOutput.textContent = `${remainingMonths}`;
-    monthOutput.classList.add('animated-number');
-    yearOutput.textContent = `${ageInYears}`;
-    yearOutput.classList.add('animated-number');
-
+if (currentYear === yearInt) {
+    ageInYears = currentYear - yearInt;
 }
 
-function isDateValid(day, month, year) {
-    // Define the maximum number of days for each month in a non-leap year.
-    const maxDaysPerMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+// Check if the given year is a leap year
+const isLeapYear = (year) => (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 
-    // Check if the year is a leap year (February has 29 days).
-    if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) {
-        maxDaysPerMonth[1] = 29;
-    }
+// Adjust age calculation for leap years
+const daysInYear = isLeapYear(givenDate.getFullYear()) ? 366 : 365;
+const ageInMilliseconds = currentDate - givenDate;
+const ageInDays = Math.floor(ageInMilliseconds / (24 * 60 * 60 * 1000));
+const adjustedAgeInDays = (ageInDays * daysInYear) / 365;
 
-    // Check if the day is within the valid range for the given month.
-    return day <= maxDaysPerMonth[month - 1];
+// Calculate age in months based on the year and month difference
+const yearDifference = currentDate.getFullYear() - givenDate.getFullYear();
+const monthDifference = currentDate.getMonth() - givenDate.getMonth();
+const ageInMonths = yearDifference * 12 + monthDifference;
+
+// Calculate the remaining days and months
+const remainingMonths = ageInMonths % 12;
+const remainingDays = adjustedAgeInDays % 30;
+
+// Set the output values
+dayOutput.textContent = `${remainingDays.toFixed(0)}`; // Use toFixed to round to the nearest integer
+dayOutput.classList.add('animated-number');
+monthOutput.textContent = `${remainingMonths}`;
+monthOutput.classList.add('animated-number');
+yearOutput.textContent = `${ageInYears}`;
+yearOutput.classList.add('animated-number');
+
 }
